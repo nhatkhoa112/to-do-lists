@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
 import TaskForm  from './Components/TaskForm';
-import Control  from './Components/Control'
-import TaskList  from './Components/TaskList'
-
+import Control  from './Components/Control';
+import TaskList  from './Components/TaskList';
+import _ from 'lodash';
 
 class App extends React.Component {
 
@@ -112,7 +112,10 @@ class App extends React.Component {
 
     onUpdateStatus = (id) => {
         var { tasks } = this.state;
-        var index = this.findIndex(id);
+        // var index = this.findIndex(id);
+        var index = _.findIndex(tasks, (task) =>{
+            return task.id === id;
+        })
         if (index !== -1){
             tasks[index].status = ! tasks[index].status;
             this.setState({
@@ -214,9 +217,9 @@ class App extends React.Component {
             else return 0 
         });
 
-    }else{
+    } else if(sortBy === "status"){
         tasks = tasks.sort((a,b) =>{
-            if(a.status >b.status) return -sortValue
+            if(a.status >b.status) return  -sortValue
             else if(a.status < b.status) return sortValue
             else return 0 
         });
