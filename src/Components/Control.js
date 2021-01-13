@@ -9,7 +9,10 @@ class App extends React.Component {
     return ( 
 <div>
     <Search onSearch={this.props.onSearch}/>
-    <Sort />
+    <Sort   onSort={this.props.onSort}
+            sortBy={this.props.sortBy}
+            sortValue={this.props.sortValue}
+    />
 </div>
 
 
