@@ -5,11 +5,44 @@ class TaskForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            id : '',
             name : '',
             status : false,
         }
     }
 
+    componentWillMount(){
+        if(this.props.task) {
+            this.setState({
+                id : this.props.task.id,
+                name : this.props.task.name,
+                status : this.props.task.status,
+
+            })
+        }
+        
+    }
+
+    // chua sua duoc//
+
+
+   componentWillReceiveProps(nextProps){
+      
+       if( nextProps !== null &&   nextProps.task !== null ){
+           this.setState({
+               id : nextProps.task.id,
+               name : nextProps.task.name,
+               status : nextProps.task.status,
+           })
+       }else if(!nextProps.task){
+           this.setState({
+            id : '',
+            name : '',
+            status : false,
+           })
+       }
+
+   }
 
     onChange = (event) => {
         var target = event.target;
@@ -42,11 +75,13 @@ class TaskForm extends React.Component {
     }
   render() { 
 
+    var {id} = this.state;
 
     return ( 
         <div className="panel panel-warning">
             <div className="panel-heading">
-                <h3 className="panel-title">Add action
+                <h3 className="panel-title">
+                    {id !== '' ? "Update action" : "Add action"}  
                 <span className="fa fa-times-circle text-right"
                         onClick={this.onCloseForm}></span>
                 </h3>
