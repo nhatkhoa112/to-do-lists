@@ -13,6 +13,13 @@ class App extends React.Component {
             tasks: [],
             isDisplayForm : false,
             taskEditing : null, 
+            filter : {
+                name : '',
+                status : -1
+            },
+            keyword: '',
+
+        
         }
     }
 
@@ -150,8 +157,45 @@ class App extends React.Component {
         this.onShowForm();
     }
 
+    onFilter = (filterName, filterStatus) => {
+        filterStatus = parseInt(filterStatus,10);
+        this.setState({
+            filter: {
+                name: filterName.toLowerCase(),
+                status: filterStatus
+            }
+        })
+    }
+
+    onSearch =(keyword) => {
+        this.setState({ 
+            keyword : keyword
+        })
+    }
     render() { 
-    var { tasks , isDisplayForm, taskEditing} = this.state;
+    var { tasks , isDisplayForm, taskEditing, filter, keyword} = this.state;
+   if(filter){
+       if(filter.name){
+           tasks = tasks.filter((task)=>{
+               return task.name.toLowerCase().indexOf(filter.name) !== -1;
+           });
+       }
+       tasks = tasks.filter((task)=>{
+           if(filter.status === -1){
+               return task;
+           }else{
+               return task.status === (filter.status === 1 ? true : false)
+           }
+       })
+    }
+    
+    if(keyword){
+       tasks = tasks.filter((task) =>{
+           return task.name.toLowerCase().indexOf(keyword) !== -1
+       })
+    }
+    
+
     var elmTaskForm = isDisplayForm === true ? <TaskForm 
                                                         onSubmit={this.onSubmit} 
                                                         onCloseForm={this.onCloseForm}
@@ -180,14 +224,17 @@ class App extends React.Component {
               </button>
               
               <div className="row mt-15">
-                <Control />
+                <Control 
+                onSearch={this.onSearch}/>
               </div>
               <div className="row mt-15">
                   <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                       <TaskList tasks={ tasks }
                                 onUpdateStatus={this.onUpdateStatus} 
                                 onDelete={this.onDelete}
-                                onUpdate={this.onUpdate}     />
+                                onUpdate={this.onUpdate}    
+                                onFilter={this.onFilter}
+                                />
 
                   </div>
               </div>
