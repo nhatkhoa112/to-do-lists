@@ -10,9 +10,8 @@ class App extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            tasks: [
-                
-            ] 
+            tasks: [],
+            isDisplayForm : false, 
         }
     }
 
@@ -56,8 +55,30 @@ class App extends React.Component {
         return this.s4()+this.s4()+ '-'+this.s4() + '-' +this.s4()+'/'+this.s4()+'--'+this.s4()
     }
 
+    onToggleForm = () => {
+        this.setState({
+            isDisplayForm : !this.state.isDisplayForm
+        })
+
+    }
+    onSubmit = (data) => {
+        var { tasks } = this.state
+        data.id = this.generateID();
+        tasks.push(data);
+        this.setState({
+            tasks : tasks
+        });
+        localStorage.setItem('tasks', JSON.stringify(tasks))
+    }
+    onCloseForm = () => {
+        this.setState({
+            isDisplayForm : false,
+        })
+    }
+
     render() { 
-    var { tasks } = this.state;
+    var { tasks , isDisplayForm} = this.state;
+    var elmTaskForm = isDisplayForm === true ? <TaskForm onSubmit={this.onSubmit} onCloseForm={this.onCloseForm}/> : '';
     return ( 
       <div className="container">
       <div className="text-center">
@@ -65,16 +86,19 @@ class App extends React.Component {
           <hr/>
       </div>
       <div className="row">
-          <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-              <TaskForm />
+          <div className={isDisplayForm === true ? "col-xs-4 col-sm-4 col-md-4 col-lg-4": ""}>
+              {elmTaskForm}
           </div>
-          <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-              <button type="button" className="btn btn-primary">
+          <div className={isDisplayForm === true ? "col-xs-8 col-sm-8 col-md-8 col-lg-8" : "col-xs-12 col-sm-12 col-md-12 col-lg-12"}>
+              <button type="button" 
+                        className="btn btn-primary"
+                        onClick={this.onToggleForm}>
                   <span className="fa fa-plus mr-5"></span>Add action
               </button>
               <button type="button" 
                         className="btn btn-danger ml-5"
-                        onClick={this.onGenerateData(   )}>
+                        onClick={this.onGenerateData()}
+                        >
                   Generate data
               </button>
               
